@@ -30,7 +30,7 @@
       />
 
       <h3>The image of the event</h3>
-      <UploadImages @change="handleImages" />
+      <UploadImages @changed="handleImages" />
 
       <button type="submit">Submit</button>
     </form>
@@ -55,11 +55,20 @@ export default {
         description: '',
         location: '',
         organizer: { id: '', name: '' }
-      }
+      },
+      files: []
     }
   },
   methods: {
     saveEvent() {
+      Promise.all(
+        this.files.map((file) => {
+          return EventService.uploadFile(file)
+        })
+      ).then((res) => {
+        console.log(res)
+        console.log('finish upload file')
+      })
       EventService.saveEvent(this.event)
         .then((response) => {
           console.log(response)
@@ -78,7 +87,7 @@ export default {
         })
     },
     handleImages(files) {
-      console.log(files)
+      this.files = files
     }
   }
 }
