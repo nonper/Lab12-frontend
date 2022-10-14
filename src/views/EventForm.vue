@@ -29,6 +29,9 @@
         label="Select an Organizer"
       />
 
+      <h3>The image of the event</h3>
+      <UploadImages @change="handleImages" />
+
       <button type="submit">Submit</button>
     </form>
 
@@ -37,10 +40,13 @@
 </template>
 
 <script>
+import UploadImages from 'vue-upload-drop-images'
 import EventService from '@/services/EventService.js'
 export default {
   inject: ['GStore'],
-
+  components: {
+    UploadImages
+  },
   data() {
     return {
       event: {
@@ -70,6 +76,9 @@ export default {
         .catch(() => {
           this.$router.push('NetworkError')
         })
+    },
+    handleImages(files) {
+      console.log(files)
     }
   }
 }

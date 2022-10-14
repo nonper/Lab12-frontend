@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "concurrently \"json-server --watch db.json --port 3004\" \"vue-cli-service serve\" ",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -13,6 +13,7 @@
     "nprogress": "^0.2.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
+    "vue-upload-drop-images": "^1.0.7",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
