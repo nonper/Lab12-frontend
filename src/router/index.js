@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import EventListView from '@/views/EventListView.vue'
 import EventEditView from '@/views/event/EventEditView.vue'
 import EventRegisterView from '@/views/event/EventRegisterView.vue'
-import AboutView from '../views/AboutView.vue'
+import OrganizerListView from '../views/OrganizerListView.vue'
 import EventLayoutView from '@/views/event/EventLayoutView.vue'
 import EventDetailView from '@/views/event/EventDetailView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
@@ -12,6 +12,10 @@ import NProgress from 'nprogress'
 import GStore from '@/store'
 import EventService from '@/services/EventService'
 import OrganizerService from '@/services/OrganizerService.js'
+import OrganizerLayout from '../views/event/OrganizerLayoutView.vue'
+import OrganizerDetails from '../views/event/OrganizerDetailView.vue'
+import OrganizerForm from '../views/OrganizerForm.vue'
+import OrganizerEdit from '../views/event/OrganizerEdit.vue'
 const routes = [
   {
     path: '/',
@@ -20,9 +24,14 @@ const routes = [
     props: (route) => ({ page: parseInt(route.query.page) || 1 })
   },
   {
-    path: '/about',
-    name: 'about',
-    component: AboutView
+    path: '/organizer',
+    name: 'OrganizerListView',
+    component: OrganizerListView
+  },
+  {
+    path: '/OrganizerForm',
+    name: 'OrganizerForm',
+    component: OrganizerForm
   },
   {
     path: '/event/:id',
@@ -63,6 +72,42 @@ const routes = [
         name: 'EventEdit',
         props: true,
         component: EventEditView
+      }
+    ]
+  },
+  {
+    path: '/organizer/:id',
+    name: 'OrganizerLayout',
+    component: OrganizerLayout,
+    beforeEnter: (to) => {
+      return OrganizerService.getOrganizer(to.params.id)
+        .then((response) => {
+          GStore.organizers = response.data
+        })
+        .catch((error) => {
+          if (error.response && error.response.start == 404) {
+            return {
+              name: '404Resource',
+              parames: { resource: 'event' }
+            }
+          } else {
+            return { name: 'NetworkError' }
+          }
+        })
+    },
+    props: true,
+    children: [
+      {
+        path: '',
+        name: 'OrganizerDetails',
+        component: OrganizerDetails,
+        props: true
+      },
+      {
+        path: 'edit',
+        name: 'OrganizerEdit',
+        component: OrganizerEdit,
+        props: true
       }
     ]
   },
